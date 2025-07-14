@@ -1,0 +1,43 @@
+# Generated folders
+/dist
+/node_modules
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+
+# Temporary build files
+*.tsbuildinfo
+.tmp
+.temp
+
+# Test coverage files
+/coverage
+
+# Firefox debug files
+web-ext-artifacts/
+
+# Dev tests manifest
+/manifest.json
+
+# Reviewer source package for Mozilla
+reviewer-source*.zip
+/reviewer-source

@@ -1,0 +1,56 @@
+name: Build and Release Extensions
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build-web-extensions:
+    name: Build Chromium and Firefox Extensions
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Build Firefox extension
+      run: npm run package:firefox
+      
+    - name: Build Chromium extension
+      run: npm run package:chromium
+      
+    - name: Get package version
+      id: package_version
+      run: echo "PACKAGE_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+      
+    - name: Upload Firefox extension to release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./web-ext-artifacts/firefox/firefox-hym-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip
+        asset_name: firefox-hym-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip
+        asset_content_type: application/zip
+
+    - name: Upload Chromium extension to release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./web-ext-artifacts/chromium/chromium-hym-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip
+        asset_name: chromium-hym-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip
+        asset_content_type: application/zip

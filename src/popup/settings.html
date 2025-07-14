@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../styles/main.css">
+        <title>Hide YouTube Members Only - Settings</title>
+    </head>
+    <body class="bg-gray-700 text-white">
+        <div class="max-w-3xl mx-auto p-6">
+            <!-- Header -->
+            <header class="pb-4 border-b border-gray-600">
+                <h1 class="text-2xl font-semibold text-white flex items-center gap-2 mb-2" id="pageTitle">
+                    <img src="../assets/icons/icon.png" alt="Logo" class="w-8 h-8">
+                    Hide YouTube Members Only
+                </h1>
+                <div id="welcomeMessage">
+                    <p class="text-md text-gray-300 mb-1">
+                        Thanks for installing! Here you can configure how the extension behaves.
+                    </p>
+                    <p class="text-sm text-gray-400">
+                        This setting will help you hide videos that are reserved for channel members only.
+                    </p>
+                </div>
+                <div class="mt-3 text-xs text-gray-400 flex items-center gap-1">
+                    Created by YouGo
+                    <a href="https://github.com/YouG-o" target="_blank" rel="noopener noreferrer">
+                        <img src="../assets/icons/Github-Dark.svg" alt="GitHub" title="GitHub" class="w-4 h-4 hover:opacity-80 transition-opacity">
+                    </a>
+                </div>
+            </header>
+
+            <main>
+                <div class="space-y-6">
+                    <!-- Hide Members Only Videos Feature -->
+                    <div class="p-5 rounded-lg border border-gray-600 hover:bg-gray-600/30 transition-colors">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <h2 class="text-lg font-medium text-white">Hide Members Only Videos</h2>
+                                <div class="relative group tooltip">
+                                    <svg class="w-5 h-5 text-gray-400 cursor-help group hover:text-gray-300" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                                    </svg>
+                                    <span class="absolute z-20 bottom-full left-0 ml-[-20px] mb-2 w-[220px] px-3 py-2 text-sm text-white bg-gray-900/95 rounded-md shadow-lg whitespace-normal opacity-0 pointer-events-none invisible group-hover:opacity-100 group-hover:visible transition-opacity">
+                                        Hide videos that are reserved for channel members only.
+                                    </span>
+                                </div>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer" id="hideMembersOnlyVideosFeature">
+                                <div class="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+           <footer class="flex flex-col gap-4 pt-4 mt-4 border-t border-gray-600">
+                <div class="flex justify-center">
+                    <a href="https://ko-fi.com/yougo" target="_blank" rel="noopener noreferrer">
+                        <img src="../assets/icons/ko-fi.png" alt="Support me on Ko-fi" title="Support me on Ko-fi" class="max-h-10">
+                    </a>
+                </div>
+                <div class="flex items-center justify-between">
+                    <p class="text-xs text-gray-400">v<span id="extensionVersion"></span></p>
+                    <a href="https://github.com/YouG-o/Hide_YouTube_Members-Only/issues" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        class="text-xs text-gray-400 hover:text-gray-300 transition-colors flex items-center gap-1">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        </svg>
+                        Report an issue
+                    </a>
+                </div>
+            </footer>
+        </div>
+
+        <script src="../browser-polyfill.js"></script>
+        <script src="../popup/popup.js" type="module"></script>
+    </body>
+</html>
