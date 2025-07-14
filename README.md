@@ -10,8 +10,8 @@
 
   <br>
 
-  [![Available on Mozzila](./assets/images/firefox.png)]()
-  [![Available on Chrome Web Store](./assets/images/chrome.png)]()
+  [![Available on Mozzila](./assets/images/firefox.png)](https://addons.mozilla.org/firefox/addon/hide-youtube-members-only-vids/)
+  [![Available on Chrome Web Store](./assets/images/chrome.png)](https://chromewebstore.google.com/detail/hide-youtube-members-only/ggmclmoogihikohmpbclmgmddafhabdl)
 
 
 </div>
@@ -35,8 +35,8 @@
   ### Installation
   ```bash
   # Clone the repository
-  git clone https://github.com/YouG-o/YouTube_Default_Settings.git
-  cd YouTube_Default_Settings
+  git clone https://github.com/YouG-o/Hide_YouTube_Members-Only.git
+  cd Hide_YouTube_Members-Only
 
   # Install dependencies
   npm install
