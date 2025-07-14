@@ -1,0 +1,53 @@
+{
+  "manifest_version": 3,
+  "author": "YouGo",
+  "name": "Hide YouTube Members-Only",
+  "description": "Hides members-only videos on YouTube.",
+  "icons": {
+    "48": "dist/assets/icons/icon.png",
+    "96": "dist/assets/icons/icon.png"
+  },
+
+  "action": {
+    "default_icon": {
+      "48": "dist/assets/icons/icon.png",
+      "96": "dist/assets/icons/icon.png"
+    },
+    "default_popup": "dist/popup/popup.html",
+    "default_title": "HYM"
+  },
+
+  "permissions": [
+    "storage"
+  ],
+
+  "host_permissions": [
+    "*://*.youtube.com/*"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.youtube.com/*"
+      ],
+      "js": ["dist/browser-polyfill.js", "dist/content/content.js"]
+    }
+  ],
+
+  "background": {
+    "scripts": ["dist/browser-polyfill.js", "dist/background/background.js"],
+    "type": "module"
+  },
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{341aed5f-a69f-40cd-91d5-05d16ba4e013}",
+      "strict_min_version": "112.0"
+    }
+  },
+
+  "options_ui": {
+  "page": "dist/popup/settings.html",
+  "open_in_tab": true
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "name": "hym",
+  "version": "1.0.0",
+  "description": "Hide members-only videos on YouTube.",
+  "scripts": {
+    "clean": "rm -rf dist && rm -f manifest.json",
+    "create-dirs": "mkdir -p dist/popup dist/content dist/background dist/styles dist/assets/icons",
+    "bundle:content": "esbuild src/content/index.ts --bundle --outfile=dist/content/content.js --platform=browser --format=iife",
+    "bundle:background": "esbuild src/background/background.ts --bundle --outfile=dist/background/background.js --platform=browser --format=iife",
+    "bundle:popup": "esbuild src/popup/popup.ts --bundle --outfile=dist/popup/popup.js --platform=browser --format=iife",
+    "bundle:all": "npm run bundle:content && npm run bundle:background && npm run bundle:popup",
+    "build": "npm run build:firefox && npm run build:chromium",
+    "build:firefox": "npm run build:ts && npm run clean && npm run create-dirs && npm run pre:web-ext:firefox && npm run build:common && npm run copy:assets",
+    "build:chromium": "npm run build:ts && npm run clean && npm run create-dirs && npm run pre:web-ext:chromium && npm run build:common && npm run copy:assets",
+    "build:common": "npm run build:polyfill && npm run bundle:all && npm run build:css && npm run build:html && npm run post:build",
+    "build:ts": "tsc -p tsconfig.json",
+    "build:css": "tailwindcss -i ./src/styles/main.css -o ./dist/styles/main.css",
+    "build:html": "cp src/popup/popup.html dist/popup/ && cp src/popup/settings.html dist/popup/",
+    "build:polyfill": "cp node_modules/webextension-polyfill/dist/browser-polyfill.js dist/",
+    "watch": "concurrently \"npm run watch:ts\" \"npm run watch:css\"",
+    "watch:ts": "tsc --watch",
+    "watch:css": "tailwindcss -i ./src/styles/main.css -o ./dist/styles/main.css --watch",
+    "copy:assets": "cp -r assets/icons dist/assets/",
+    "inject-version-manifest": "node scripts/inject-version-manifest.js",
+    "pre:web-ext:firefox": "cp manifests/manifest.firefox.json manifest.json && npm run inject-version-manifest",
+    "pre:web-ext:chromium": "cp manifests/manifest.chromium.json manifest.json && npm run inject-version-manifest",
+    "web-ext:firefox": "web-ext build --overwrite-dest -a web-ext-artifacts/firefox --filename=firefox-hym-${npm_package_version}.zip",
+    "web-ext:chromium": "web-ext build --overwrite-dest -a web-ext-artifacts/chromium --filename=chromium-hym-${npm_package_version}.zip",
+    "post:web-ext": "rm manifest.json",
+    "package": "npm run package:firefox && npm run package:chromium && npm run post:web-ext",
+    "package:firefox": "npm run build:firefox && rm -rf build-tmp && mkdir build-tmp && cp -r dist build-tmp/ && cp LICENSE build-tmp/ && cp CHANGELOG.md build-tmp/ && cp manifest.json build-tmp/ && (cd build-tmp && web-ext build --overwrite-dest -a ../web-ext-artifacts/firefox --filename=firefox-hym-${npm_package_version}.zip) && rm -rf build-tmp && npm run clean",
+    "package:mozilla-reviewer": "node scripts/package-for-mozilla-reviewers.js",
+    "package:chromium": "npm run build:chromium && rm -rf build-tmp && mkdir build-tmp && cp -r dist build-tmp/ && cp LICENSE build-tmp/ && cp CHANGELOG.md build-tmp/ && cp manifest.json build-tmp/ && (cd build-tmp && web-ext build --overwrite-dest -a ../web-ext-artifacts/chromium --filename=chromium-hym-${npm_package_version}.zip) && rm -rf build-tmp && npm run clean",
+    "post:build": "rimraf dist/config dist/types"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YouG-o/Hide_YouTube_Members-Only.git"
+  },
+  "keywords": [
+    "youtube",
+    "extension",
+    "addon",
+    "settings",
+    "hide",
+    "members-only"
+  ],
+  "author": "YouGo",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/YouG-o/Hide_YouTube_Members-Only/issues"
+  },
+  "homepage": "https://github.com/YouG-o/Hide_YouTube_Members-Only",
+  "devDependencies": {
+    "@types/chrome": "^0.0.326",
+    "@types/webextension-polyfill": "^0.12.3",
+    "autoprefixer": "^10.4.21",
+    "concurrently": "^9.1.2",
+    "postcss": "^8.5.6",
+    "rimraf": "^6.0.1",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.8.3",
+    "web-ext": "^8.7.1",
+    "esbuild": "^0.25.5"
+  },
+  "dependencies": {
+    "webextension-polyfill": "^0.12.0"
+  }
+}
