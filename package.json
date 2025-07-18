@@ -1,6 +1,6 @@
 {
   "name": "hym",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Hide members-only videos on YouTube.",
   "scripts": {
     "clean": "rm -rf dist && rm -f manifest.json",
@@ -27,8 +27,7 @@
     "pre:web-ext:chromium": "cp manifests/manifest.chromium.json manifest.json && npm run inject-version-manifest",
     "web-ext:firefox": "web-ext build --overwrite-dest -a web-ext-artifacts/firefox --filename=firefox-hym-${npm_package_version}.zip",
     "web-ext:chromium": "web-ext build --overwrite-dest -a web-ext-artifacts/chromium --filename=chromium-hym-${npm_package_version}.zip",
-    "post:web-ext": "rm manifest.json",
-    "package": "npm run package:firefox && npm run package:chromium && npm run post:web-ext",
+    "package": "npm run package:firefox && npm run package:chromium",
     "package:firefox": "npm run build:firefox && rm -rf build-tmp && mkdir build-tmp && cp -r dist build-tmp/ && cp LICENSE build-tmp/ && cp CHANGELOG.md build-tmp/ && cp manifest.json build-tmp/ && (cd build-tmp && web-ext build --overwrite-dest -a ../web-ext-artifacts/firefox --filename=firefox-hym-${npm_package_version}.zip) && rm -rf build-tmp && npm run clean",
     "package:mozilla-reviewer": "node scripts/package-for-mozilla-reviewers.js",
     "package:chromium": "npm run build:chromium && rm -rf build-tmp && mkdir build-tmp && cp -r dist build-tmp/ && cp LICENSE build-tmp/ && cp CHANGELOG.md build-tmp/ && cp manifest.json build-tmp/ && (cd build-tmp && web-ext build --overwrite-dest -a ../web-ext-artifacts/chromium --filename=chromium-hym-${npm_package_version}.zip) && rm -rf build-tmp && npm run clean",

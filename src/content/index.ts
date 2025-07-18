@@ -13,7 +13,6 @@ import { ExtensionSettings } from '../types/types';
 import { setupUrlObserver, setupVisibilityChangeListener } from './observers';
 
 
-injectFetchInterceptor();
 coreLog('Content script starting to load...');
 
 export let currentSettings: ExtensionSettings | null = null;
@@ -29,8 +28,9 @@ function injectFetchInterceptor() {
 // Initialize features based on settings
 async function initializeFeatures() {
     currentSettings = await loadExtensionSettings();
-
+    
     if(currentSettings?.hideMembersOnlyVideos.enabled){
+        injectFetchInterceptor();
         setupUrlObserver();
         setupVisibilityChangeListener();
     }

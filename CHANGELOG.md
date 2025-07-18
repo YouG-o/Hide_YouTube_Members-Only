@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2025-07-14
+
 ### Added
 - Add request interception method to filter members-only videos before DOM rendering.
 
@@ -16,5 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/YouG-o/Hide_YouTube_Members-Only/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/YouG-o/Hide_YouTube_Members-Only/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/YouG-o/Hide_YouTube_Members-Only/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/YouG-o/Hide_YouTube_Members-Only/releases/tag/v1.0.0
+
