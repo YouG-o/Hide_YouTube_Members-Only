@@ -7,15 +7,24 @@
  * This program is distributed without any warranty; see the license for details.
  */
 
-import { coreLog } from '../utils/logger';
+import { coreLog, coreErrorLog, memberVideosErrorLog, memberVideosLog } from '../utils/logger';
 import { loadExtensionSettings } from '../utils/settings';
 import { ExtensionSettings } from '../types/types';
 import { setupUrlObserver, setupVisibilityChangeListener } from './observers';
 
 
+injectFetchInterceptor();
 coreLog('Content script starting to load...');
 
 export let currentSettings: ExtensionSettings | null = null;
+
+
+function injectFetchInterceptor() {
+    const script = document.createElement('script');
+    script.src = browser.runtime.getURL('dist/content/script.js');
+    document.documentElement.appendChild(script);
+    script.remove();
+}
 
 // Initialize features based on settings
 async function initializeFeatures() {
@@ -27,5 +36,8 @@ async function initializeFeatures() {
     }
 }
 
-// Start initialization
-initializeFeatures();
+initializeFeatures().then(() => {
+    coreLog('Content script loaded successfully.');
+}).catch((error) => {
+    coreErrorLog('Error loading content script:', error);
+});

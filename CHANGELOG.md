@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Add request interception method to filter members-only videos before DOM rendering.
+
 ## [1.0.0] - 2025-07-14
 
 
