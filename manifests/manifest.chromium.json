@@ -30,7 +30,8 @@
       "matches": [
         "*://*.youtube.com/*"
       ],
-      "js": ["dist/browser-polyfill.js", "dist/content/content.js"]
+      "js": ["dist/browser-polyfill.js", "dist/content/content.js"],
+      "run_at": "document_start"
     }
   ],
 
@@ -38,5 +39,12 @@
     "service_worker": "dist/background/background.js"
   },
 
-  "options_page": "dist/popup/settings.html"
+  "options_page": "dist/popup/settings.html",
+
+  "web_accessible_resources": [
+    {
+      "resources": ["dist/content/script.js"],
+      "matches": ["*://*.youtube.com/*"]
+    }
+  ]
 }
