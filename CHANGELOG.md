@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2025-08-02
+
+### Changed
+- Updated extension icon.
+
+### Added
+- Added a log in the script showing the total number of members-only videos hidden from API responses.
+- Added a warning message in the welcome page and a refresh button instead of auto-reloading on install.
+
+### Removed
+- Removed automatic page reload on extension install.
+
 ## [1.1.0] - 2025-07-14
 
 ### Added
@@ -18,7 +30,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/YouG-o/Hide_YouTube_Members-Only/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/YouG-o/Hide_YouTube_Members-Only/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/YouG-o/Hide_YouTube_Members-Only/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/YouG-o/Hide_YouTube_Members-Only/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/YouG-o/Hide_YouTube_Members-Only/releases/tag/v1.0.0
 

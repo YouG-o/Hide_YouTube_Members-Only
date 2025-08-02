@@ -89,3 +89,59 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSettings();
     initEventListeners();
 });
+
+
+// Check if this is a welcome page (first install)
+const urlParams = new URLSearchParams(window.location.search);
+const isWelcome = urlParams.get('welcome') === 'true';
+
+if (isWelcome) {
+    const pageTitle = document.getElementById('pageTitle');
+    const welcomeMessage = document.getElementById('welcomeMessage');
+    
+    if (pageTitle) {
+        // Keep the image and change only the text part
+        const imgElement = pageTitle.querySelector('img');
+        if (imgElement) {
+            pageTitle.innerHTML = '';
+            pageTitle.appendChild(imgElement);
+            pageTitle.appendChild(document.createTextNode('Welcome to YouTube No Translation!'));
+        }
+    }
+    
+    if (welcomeMessage) {
+        welcomeMessage.classList.remove('hidden');
+    }
+}
+
+
+// Handle reload of all YouTube tabs from the welcome page
+if (isWelcome) {
+    const reloadBtn = document.getElementById('reloadYoutubeTabsBtn') as HTMLButtonElement | null;
+    if (reloadBtn) {
+        reloadBtn.onclick = async () => {
+            try {
+                const tabs = await browser.tabs.query({
+                    url: [
+                        "*://*.youtube.com/*",
+                        "*://*.youtube-nocookie.com/*"
+                    ]
+                });
+                let count = 0;
+                for (const tab of tabs) {
+                    // Only reload tabs that are not discarded
+                    if (tab.id && tab.discarded === false) {
+                        await browser.tabs.reload(tab.id);
+                        count++;
+                    }
+                }
+                reloadBtn.textContent = `Reloaded ${count} active tab${count !== 1 ? 's' : ''}!`;
+                reloadBtn.disabled = true;
+            } catch (error) {
+                reloadBtn.textContent = "Error reloading tabs";
+                reloadBtn.disabled = true;
+                console.error("[YNT] Failed to reload YouTube tabs:", error);
+            }
+        };
+    }
+}

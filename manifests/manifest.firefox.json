@@ -1,8 +1,6 @@
 {
   "manifest_version": 3,
-  "author": "YouGo",
   "name": "Hide YouTube Members-Only",
-  "description": "Hides members-only videos on YouTube.",
   "icons": {
     "48": "dist/assets/icons/icon.png",
     "96": "dist/assets/icons/icon.png"
