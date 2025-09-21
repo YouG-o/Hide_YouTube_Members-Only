@@ -11,17 +11,36 @@ import { memberVideosLog, memberVideosErrorLog } from "../../utils/logger";
 
 
 export function hideMembersOnlyVideos() {
-    // Select all video grid items
-    const videoItems = document.querySelectorAll('ytd-rich-grid-media, ytd-video-renderer');
+    // Select all video grid items and recommended videos
+    const videoItems = document.querySelectorAll('ytd-rich-grid-media, ytd-video-renderer, yt-lockup-view-model');
     let hiddenCount = 0;
 
     videoItems.forEach(item => {
-        // Look for the "Members only" badge inside each video item
+        let shouldHide = false;
+
+        // Look for the "Members only" badge in current format
         const membersBadge = item.querySelector('.badge-style-type-members-only');
         if (membersBadge) {
-            // Hide the parent grid item to avoid breaking the grid layout
-            const parentItem = item.closest('ytd-rich-item-renderer');
-            const target = parentItem ? parentItem as HTMLElement : item as HTMLElement;
+            shouldHide = true;
+        }
+
+        // Look for the "Members only" badge in recommended videos format (yt-lockup-view-model)
+        const commerceBadge = item.querySelector('.yt-badge-shape--commerce');
+        if (commerceBadge) {
+            shouldHide = true;
+        }
+
+        if (shouldHide) {
+            // For recommended videos (yt-lockup-view-model), hide the element directly
+            // For grid videos, hide the parent grid item to avoid breaking layout
+            let target: HTMLElement;
+            if (item.tagName.toLowerCase() === 'yt-lockup-view-model') {
+                target = item as HTMLElement;
+            } else {
+                const parentItem = item.closest('ytd-rich-item-renderer');
+                target = parentItem ? parentItem as HTMLElement : item as HTMLElement;
+            }
+            
             if (target.style.display !== 'none') {
                 target.style.display = 'none';
                 hiddenCount++;
