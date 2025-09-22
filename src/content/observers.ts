@@ -10,16 +10,23 @@
 import { coreLog } from "../utils/logger";
 import { currentSettings } from "./index";
 import { hideMembersOnlyVideos } from "./memberVideos/MemberVideos";
+import { waitForElement } from "../utils/dom";
 
 
-let homeObserver: MutationObserver | null = null;
-let lastHomeRefresh = 0;
-const THROTTLE_DELAY = 500;
+let pageGridObservers: MutationObserver[] = [];
+let pageGridParentObserver: MutationObserver | null = null;
+let suggestedVideosObserver: MutationObserver | null = null;
+
+const OBSERVERS_DEBOUNCE_MS = 100;
+
+let pageVideosDebounceTimer: number | null = null;
+let suggestedVideosDebounceTimer: number | null = null;
+
 
 async function pageVideosObserver() {
     cleanupPageVideosObserver();
 
-    let pageName = null;
+    let pageName: string = '';
     if (window.location.pathname === '/') {
         pageName = 'Home';
     } else if (window.location.pathname === '/feed/subscriptions') {
@@ -28,6 +35,8 @@ async function pageVideosObserver() {
         pageName = 'Channel';
     } else if (window.location.pathname === '/feed/trending') {
         pageName = 'Trending';
+    } else {
+        pageName = 'Unknown';
     }
     coreLog(`Setting up ${pageName} page videos observer`);
 
@@ -48,33 +57,103 @@ async function pageVideosObserver() {
         });
     }
 
-    // Re-select all grids after potential waiting
     const allGrids = Array.from(document.querySelectorAll('#contents.ytd-rich-grid-renderer')) as HTMLElement[];
-
-    // Observe each grid
     allGrids.forEach(grid => {
         hideMembersOnlyVideos();
-        const observer = new MutationObserver(() => {
-            const now = Date.now();
-            if (now - lastHomeRefresh >= THROTTLE_DELAY) {
-                coreLog(`${pageName} page mutation detected`);
-                setTimeout(() => {
-                    hideMembersOnlyVideos();
-                }, 100);
-                lastHomeRefresh = now;
-            }
-        });
-
+        const observer = new MutationObserver(() => handleGridMutationDebounced(pageName));
         observer.observe(grid, {
-            childList: true
+            childList: true,
+            attributes: true,
+            characterData: true
+        });
+        pageGridObservers.push(observer);
+    });
+
+    // Add parent grid observer (useful when clicking on filters)
+    const gridParent = document.querySelector('#primary > ytd-rich-grid-renderer') as HTMLElement | null;
+    if (gridParent) {
+        pageGridParentObserver = new MutationObserver(() => handleGridMutationDebounced(pageName));
+        pageGridParentObserver.observe(gridParent, {
+            attributes: true
+        });
+    }
+}
+
+// New debounced handler for grid mutations
+function handleGridMutationDebounced(pageName: string) {
+    if (pageVideosDebounceTimer !== null) {
+        clearTimeout(pageVideosDebounceTimer);
+    }
+    pageVideosDebounceTimer = window.setTimeout(() => {
+        coreLog(`${pageName} page mutation detected.`);
+        hideMembersOnlyVideos();
+        setTimeout(() => {
+            hideMembersOnlyVideos();
+        }, 650);
+        pageVideosDebounceTimer = null;
+    }, OBSERVERS_DEBOUNCE_MS);
+}
+
+function suggestedVidsObserver() {
+    cleanupSuggestedVideosObserver();
+
+    // Observer for recommended videos (side bar)
+    waitForElement('#secondary-inner ytd-watch-next-secondary-results-renderer #items').then((contents) => {
+        coreLog('Setting up recommended videos observer');
+        
+        hideMembersOnlyVideos();
+        
+        // Check if we need to observe deeper (when logged in)
+        const itemSection = contents.querySelector('ytd-item-section-renderer');
+        const targetElement = itemSection ? itemSection : contents;
+        
+        coreLog(`Observing: ${targetElement === contents ? '#items directly' : 'ytd-item-section-renderer inside #items'}`);
+        
+        suggestedVideosObserver = new MutationObserver(() => {
+            if (suggestedVideosDebounceTimer !== null) {
+                clearTimeout(suggestedVideosDebounceTimer);
+            }
+            suggestedVideosDebounceTimer = window.setTimeout(() => {
+                coreLog('Recommended videos mutation debounced (side bar)');
+                hideMembersOnlyVideos();
+                suggestedVideosDebounceTimer = null;
+            }, OBSERVERS_DEBOUNCE_MS);
+        });
+        
+        suggestedVideosObserver.observe(targetElement, {
+            childList: true,
+            subtree: true
         });
     });
 };
 
 function cleanupPageVideosObserver() {
-    homeObserver?.disconnect();
-    homeObserver = null;
-    lastHomeRefresh = 0;
+    pageGridObservers.forEach(observer => observer.disconnect());
+    pageGridObservers = [];
+    pageGridParentObserver?.disconnect();
+    pageGridParentObserver = null;
+
+    if (pageVideosDebounceTimer !== null) {
+        clearTimeout(pageVideosDebounceTimer);
+        pageVideosDebounceTimer = null;
+    }
+}
+
+function cleanupSuggestedVideosObserver() {
+    suggestedVideosObserver?.disconnect();
+    suggestedVideosObserver = null;
+
+    if (suggestedVideosDebounceTimer !== null) {
+        clearTimeout(suggestedVideosDebounceTimer);
+        suggestedVideosDebounceTimer = null;
+    }
+}
+
+function observersCleanup() {
+    coreLog('Cleaning up all observers');
+    
+    cleanupPageVideosObserver();
+    cleanupSuggestedVideosObserver();
 }
 
 // URL OBSERVER -----------------------------------------------------------
@@ -127,6 +206,9 @@ export function setupUrlObserver() {
 function handleUrlChange() {
     //coreLog(`[URL] Current pathname:`, window.location.pathname);
     coreLog(`[URL] Full URL:`, window.location.href);
+
+    // --- Clean up existing observers
+    observersCleanup();
     
     // --- Check if URL contains patterns
     const isChannelPage = window.location.pathname.includes('/@');
@@ -161,6 +243,7 @@ function handleUrlChange() {
             break;
         case '/watch': // --- Video page
             coreLog(`[URL] Detected video page`);
+            currentSettings?.hideMembersOnlyVideos.enabled && suggestedVidsObserver();
             break;
         case '/embed': // --- Embed video page
             coreLog(`[URL] Detected embed video page`);
