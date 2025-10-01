@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "Hide Members-Only on YouTube",
+  "icons": {
+    "48": "dist/assets/icons/icon.png",
+    "96": "dist/assets/icons/icon.png"
+  },
+
+  "action": {
+    "default_icon": {
+      "48": "dist/assets/icons/icon.png",
+      "96": "dist/assets/icons/icon.png"
+    },
+    "default_popup": "dist/popup/popup.html",
+    "default_title": "HYM"
+  },
+
+  "permissions": [
+    "storage"
+  ],
+
+  "host_permissions": [
+    "*://*.youtube.com/*"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.youtube.com/*"
+      ],
+      "js": ["dist/browser-polyfill.js", "dist/content/content.js"],
+      "run_at": "document_start"
+    }
+  ],
+
+  "background": {
+    "service_worker": "dist/background/background.js"
+  },
+
+  "options_page": "dist/popup/settings.html",
+
+  "web_accessible_resources": [
+    {
+      "resources": ["dist/content/script.js"],
+      "matches": ["*://*.youtube.com/*"]
+    }
+  ]
+}
