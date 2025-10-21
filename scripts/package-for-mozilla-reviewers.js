@@ -3,7 +3,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const rootDir = path.resolve(__dirname, '..');
-const outDir = path.join(rootDir, 'reviewer-source');
+const outDir = path.join(rootDir, 'mozilla-source');
 const filesToCopy = [
   'manifests',
   'src',
@@ -81,8 +81,8 @@ if (!fs.existsSync(firefoxArtifactsDir)) {
 }
 
 // 5. Zip the folder with version in the name, inside web-ext-artifacts/firefox/
-const zipName = `reviewer-source-v${version}.zip`;
+const zipName = `mozilla-source-hym-v${version}.zip`;
 const zipPath = path.join(firefoxArtifactsDir, zipName);
-execSync(`cd "${rootDir}" && zip -r "${zipPath}" reviewer-source`);
+execSync(`cd "${rootDir}" && zip -r "${zipPath}" mozilla-source`);
 fs.rmSync(outDir, { recursive: true, force: true });
 console.log(`✅ Reviewer source package created: ${zipPath}`);

@@ -105,7 +105,7 @@ if (isWelcome) {
         if (imgElement) {
             pageTitle.innerHTML = '';
             pageTitle.appendChild(imgElement);
-            pageTitle.appendChild(document.createTextNode('Welcome to YouTube No Translation!'));
+            pageTitle.appendChild(document.createTextNode(`Welcome to Hide YouTube Members-Only!`));
         }
     }
     
